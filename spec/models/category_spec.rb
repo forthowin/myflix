@@ -31,8 +31,8 @@ describe Category do
 
     it "returns 6 most recent videos" do
       cat = Category.create(name: 'TV Comedy')
-      family_guy = Video.create(title: 'Family Guy', description: 'Funny show', category: cat, created_at: 1.day.ago)
       6.times { Video.create(title: 'South Park', description: 'Funny show', category: cat)}
+      family_guy = Video.create(title: 'Family Guy', description: 'Funny show', category: cat, created_at: 1.day.ago)
       expect(cat.recent_videos).not_to include(family_guy)
     end
   end
