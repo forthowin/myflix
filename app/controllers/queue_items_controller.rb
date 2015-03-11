@@ -15,16 +15,16 @@ class QueueItemsController < ApplicationController
     queue_item = QueueItem.find(params[:id])
     if current_user.queue_items.include?(queue_item)
       queue_item.delete 
-      normalize_queue_item_positions
+      current_user.normalize_queue_item_positions
     end
-    
+
     redirect_to my_queue_path
   end
 
   def queue_update
     begin
       update_queue_item_positions
-      normalize_queue_item_positions
+      current_user.normalize_queue_item_positions
     rescue ActiveRecord::RecordInvalid
       flash[:danger] = "Invalid order number."
     end
@@ -59,11 +59,4 @@ class QueueItemsController < ApplicationController
       end
     end
   end
-
-  def normalize_queue_item_positions
-    current_user.queue_items.each_with_index do |queue_item, index|
-      queue_item.update_attributes(position: index + 1)
-    end
-  end
-
 end
