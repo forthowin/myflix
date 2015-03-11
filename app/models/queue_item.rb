@@ -2,9 +2,10 @@ class QueueItem < ActiveRecord::Base
   belongs_to :user
   belongs_to :video
 
-  delegate :category, to: :video #same as line 23
-  delegate :title, to: :video, prefix: :video #same as line 10
+  delegate :category, to: :video #same as line 24
+  delegate :title, to: :video, prefix: :video #same as line 11
 
+  validates_numericality_of :position, only_integer: true
   validates_presence_of :user, :video
 
   # def video_title
