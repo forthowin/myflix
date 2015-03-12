@@ -22,7 +22,7 @@
             .form-group
               .row
                 .col-sm-3
-                  = f.select :rating, options_for_select([5,4,3,2,1].map { |number| [pluralize(number, 'Star')] }), hide_label: true
+                  = f.select :rating, options_for_video_rating, hide_label: true
           .form-group
             %label Write Review
             .form-group
