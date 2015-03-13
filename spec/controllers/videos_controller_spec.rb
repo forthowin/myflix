@@ -3,9 +3,7 @@ require 'spec_helper'
 describe VideosController do
 
   context "with authenticated user" do
-    before do
-      session[:user_id] = Fabricate(:user).id
-    end
+    before { set_current_user }
 
     describe "GET show" do
       it "assigns @video" do
@@ -46,18 +44,16 @@ describe VideosController do
 
   context "with unauthenticated user" do
     describe "GET show" do
-      it "redirects to sign in page" do
-        video = Fabricate(:video)
-        get :show, id: video.id
-        expect(response).to redirect_to sign_in_path
+      it_behaves_like "requires sign in" do
+        let(:video) { Fabricate(:video) }
+        let(:action) { get :show, id: video.id }
       end
     end
 
     describe "GET search" do
-      it "redirects to sign in page" do
-        futurama = Fabricate(:video, title: 'Futurama')
-        get :search, search_term: 'rama'
-        expect(response).to redirect_to sign_in_path
+      it_behaves_like "requires sign in" do
+        let(:futurama) { Fabricate(:video, title: 'Futurama') }
+        let(:action) { get :search, search_term: 'rama' }
       end
     end
   end

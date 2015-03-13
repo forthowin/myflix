@@ -5,8 +5,8 @@ describe ReviewsController do
     let(:video) { Fabricate(:video) }
 
     context "with authenticated users" do
-      let(:current_user) { Fabricate(:user) }
-      before { session[:user_id] = current_user.id }
+      let(:bob) { Fabricate(:user) }
+      before { set_current_user(bob) }
 
       context "with valid input" do
         it "redirects to the video show page" do
@@ -26,7 +26,7 @@ describe ReviewsController do
 
         it "creates a review associated with the user" do
           post :create, review: Fabricate.attributes_for(:review), video_id: video.id
-          expect(Review.first.user).to eq(current_user)
+          expect(Review.first.user).to eq(bob)
         end
 
         it "sets the flash success message" do
@@ -60,11 +60,8 @@ describe ReviewsController do
       end
     end
 
-    context "with unauthenticated users" do
-      it "redirects to sign in page" do
-        post :create, review: Fabricate.attributes_for(:review), video_id: video.id
-        expect(response).to redirect_to sign_in_path
-      end
+    it_behaves_like "requires sign in" do
+      let(:action) { post :create, review: Fabricate.attributes_for(:review), video_id: video.id }
     end
   end
 end
