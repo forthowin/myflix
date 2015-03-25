@@ -29,6 +29,10 @@ describe UsersController do
         expect(User.count).to eq(1)
       end
 
+      it "saves the user into a session" do
+        expect(assigns(:user).id).to eq(session[:user_id])
+      end
+
       it "redirects to home path" do
         expect(response).to redirect_to home_path
       end
