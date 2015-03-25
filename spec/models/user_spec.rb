@@ -22,4 +22,20 @@ describe User do
       expect(bob.queued_video?(futurama)).to be_falsey
     end
   end
+
+  describe "#follows?" do
+    it "returns true if the current user is following another user" do
+      bob = Fabricate(:user)
+      bill = Fabricate(:user)
+      Fabricate(:relationship, leader: bill, follower: bob)
+      expect(bob.follows?(bill)).to be_truthy
+    end
+
+    it "returns false if the current user is not following another user" do
+      bob = Fabricate(:user)
+      bill = Fabricate(:user)
+      Fabricate(:relationship, leader: bob, follower: bill)
+      expect(bob.follows?(bill)).to be_falsey
+    end
+  end
 end
