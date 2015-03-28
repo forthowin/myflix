@@ -21,6 +21,12 @@ describe ForgotPasswordsController do
         expect(ActionMailer::Base.deliveries.last.to).to eq([bob.email])
       end
 
+      it "generates a random token for the user" do
+        bob = Fabricate(:user)
+        post :create, email: bob.email
+        expect(bob.reload.token).to be_present
+      end
+
       it "redirects to forgot password confirmation page" do
         bob = Fabricate(:user)
         post :create, email: bob.email

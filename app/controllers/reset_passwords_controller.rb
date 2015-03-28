@@ -11,7 +11,7 @@ class ResetPasswordsController < ApplicationController
   def create
     user = User.where(token: params[:token]).first
     if user
-      if user.update(token: user.generate_token, password: params[:password])
+      if user.update(token: nil, password: params[:password])
         flash[:success] = "Your password has been updated."
         redirect_to sign_in_path
       else
