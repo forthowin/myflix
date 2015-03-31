@@ -6,6 +6,7 @@ Myflix::Application.routes.draw do
   get '/home', to: 'videos#index'
 
   get '/register', to: 'users#new'
+  get '/register/:token', to: 'users#new_with_invitation_token', as: :register_with_token
 
   get '/sign-in', to: 'sessions#new'
   post '/sign-in', to: 'sessions#create'
@@ -19,9 +20,9 @@ Myflix::Application.routes.draw do
   get '/forgot-password-confirmation', to: 'forgot_passwords#confirm'
   get '/forgot-password', to: 'forgot_passwords#new'
   
-  get '/invalid-token', to: 'reset_passwords#invalid_token'
+  get '/invalid-token', to: 'pages#invalid_token'
 
-  get '/invite', to: 'invites#new'
+  get '/invite', to: 'invitations#new'
 
   resources :users, only: [:create, :show]
   resources :videos, only: :show do
@@ -35,4 +36,5 @@ Myflix::Application.routes.draw do
   resources :relationships, only: [:create, :destroy]
   resources :reset_passwords, only: [:show, :create]
   resources :forgot_passwords, only: [:create]
+  resources :invitations, only: [:create]
 end

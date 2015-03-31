@@ -38,4 +38,19 @@ describe User do
       expect(bob.follows?(bill)).to be_falsey
     end
   end
+
+  describe "#follow" do
+    it "creates a relationship between the user and another" do
+      bob = Fabricate(:user)
+      bill = Fabricate(:user)
+      bob.follow(bill)
+      expect(bob.follows?(bill)).to be_truthy
+    end
+
+    it "does not allow a user to follow themself" do
+      bob = Fabricate(:user)
+      bob.follow(bob)
+      expect(bob.follows?(bob)).to be_falsey
+    end
+  end
 end

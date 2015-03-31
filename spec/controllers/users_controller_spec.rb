@@ -13,27 +13,75 @@ describe UsersController do
     end
 
     it "redirects to home_path if logged in" do
-      session[:user_id] = Fabricate(:user).id
+      set_current_user
       get :new
       expect(response).to redirect_to home_path
     end
   end
 
+  describe "GET new_with_invitation_token" do
+    it "assigns @user with recipient's email" do
+      invitation = Fabricate(:invitation)
+      get :new_with_invitation_token, token: invitation.token
+      expect(assigns(:user).email).to eq(invitation.recipient_email)
+    end
+
+    it "assigns @invitation_token" do
+      invitation = Fabricate(:invitation)
+      get :new_with_invitation_token, token: invitation.token
+      expect(assigns(:invitation_token)).to eq(invitation.token)
+    end
+
+    it "renders the new template" do
+      invitation = Fabricate(:invitation)
+      get :new_with_invitation_token, token: invitation.token
+      expect(response).to render_template :new
+    end
+
+    it "redirects to the invalid token page for invalid token" do
+      get :new_with_invitation_token, token: 'asdf'
+      expect(response).to redirect_to invalid_token_path
+    end
+  end
+
   describe "POST create" do
     context "with valid input" do
-      before do
-        post :create, user: Fabricate.attributes_for(:user) #creates a :user in memory
-      end
-
       it "creates the user" do
+        post :create, user: Fabricate.attributes_for(:user)
         expect(User.count).to eq(1)
       end
 
       it "saves the user into a session" do
+        post :create, user: Fabricate.attributes_for(:user)
         expect(assigns(:user).id).to eq(session[:user_id])
       end
 
+      it "makes the user follow the inviter" do
+        bob = Fabricate(:user)
+        bill = Fabricate.attributes_for(:user, email: 'bill@example.com', full_name: 'Bill Boe')
+        invitation = Fabricate(:invitation, recipient_email: 'bill@example.com', recipient_name: 'Bill Boe', inviter: bob)
+        post :create, user: bill, invitation_token: invitation.token
+        expect(assigns(:user).follows?(bob)).to be_truthy
+      end
+
+      it "makes the inviter follow the user" do
+        bob = Fabricate(:user)
+        bill = Fabricate.attributes_for(:user, email: 'bill@example.com', full_name: 'Bill Boe')
+        invitation = Fabricate(:invitation, recipient_email: 'bill@example.com', recipient_name: 'Bill Boe', inviter: bob)
+        post :create, user: bill, invitation_token: invitation.token
+        expect(bob.follows?(assigns(:user))).to be_truthy
+      end
+
+      it "expires the invitation uppon acceptance" do
+        bob = Fabricate(:user)
+        bill = Fabricate.attributes_for(:user, email: 'bill@example.com', full_name: 'Bill Boe')
+        invitation = Fabricate(:invitation, recipient_email: 'bill@example.com', recipient_name: 'Bill Boe', inviter: bob)
+        post :create, user: bill, invitation_token: invitation.token
+        expect(invitation.reload.token).to be_nil
+      end
+
       it "redirects to home path" do
+        post :create, user: Fabricate.attributes_for(:user)
         expect(response).to redirect_to home_path
       end
     end

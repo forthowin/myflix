@@ -22,7 +22,4 @@ class ResetPasswordsController < ApplicationController
       redirect_to invalid_token_path
     end
   end
-
-  def invalid_token
-  end
 end
