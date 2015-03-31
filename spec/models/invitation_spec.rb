@@ -6,4 +6,9 @@ describe Invitation do
   it { should validate_presence_of(:recipient_name) }
   it { should validate_presence_of(:message) }
   it { should validate_presence_of(:inviter_id) }
+
+  it "generates a random token upon creation" do
+    invitation = Fabricate(:invitation)
+    expect(invitation.token).to be_present
+  end
 end
