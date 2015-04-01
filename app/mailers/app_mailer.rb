@@ -11,6 +11,6 @@ class AppMailer < ActionMailer::Base
 
   def send_invitation(invitation)
     @invitation = invitation
-    mail to: invitation.recipient_email, from: invitation.inviter.full_name, subject: "Invitation to myflix!"
+    mail to: invitation.recipient_email, from: invitation.inviter.email, subject: "Invitation to myflix!"
   end
 end
