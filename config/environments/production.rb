@@ -28,5 +28,5 @@ Myflix::Application.configure do
   }
   ActionMailer::Base.delivery_method = :smtp
 
-  config.action_mailer.default_url_options = { host: 'infinite-cove-6352.herokuapp.com'}
+  config.action_mailer.default_url_options = { host: 'https://infinite-cove-6352.herokuapp.com'}
 end
