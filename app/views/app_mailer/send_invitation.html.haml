@@ -3,4 +3,3 @@
   %body
     %p #{@invitation.inviter.full_name} invited you to join myflix!
     %p= @invitation.message
-    %p= link_to "Create an account at myflix", register_with_token_url(@invitation.token)
