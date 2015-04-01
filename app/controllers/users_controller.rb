@@ -22,7 +22,7 @@ class UsersController < ApplicationController
     if @user.save
       handle_token
       session[:user_id] = @user.id
-      AppMailer.send_welcome_mail(@user).deliver
+      AppMailer.delay.send_welcome_mail(@user)
       redirect_to home_path
     else
       render :new
