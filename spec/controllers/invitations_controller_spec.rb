@@ -18,9 +18,9 @@ describe InvitationsController do
       let(:action) { post :create }
     end
 
-    after { ActionMailer::Base.deliveries.clear }
-
     context "with valid inputs" do
+      after { ActionMailer::Base.deliveries.clear }
+
       it "creates an invitation" do
         set_current_user
         post :create, invitation: Fabricate.attributes_for(:invitation)
@@ -47,6 +47,8 @@ describe InvitationsController do
     end
 
     context "with invalid inputs" do
+      after { ActionMailer::Base.deliveries.clear }
+      
       it "renders the invite page" do
         set_current_user
         post :create, invitation: Fabricate.attributes_for(:invitation, recipient_name: "")
