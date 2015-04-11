@@ -14,6 +14,8 @@ gem 'bootstrap_form'
 gem 'figaro'
 gem 'sidekiq'
 gem 'sentry-raven'
+gem 'carrierwave'
+gem 'mini_magick'
 
 group :development do
   gem 'thin'
