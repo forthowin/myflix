@@ -4,19 +4,19 @@ machine:
   ruby:
     version:
       2.1.4
-  deployment:
-    production:
-      branch: master
-      commands:
-        - heroku maintenance:on --app infinite-cove-6352
-        - heroku pg:backups capture --app infinite-cove-6352
-        - git push git@heroku.com:infinite-cove-6352.git $CIRCLE_SHA1:refs/heads/master
-        - heroku run rake db:migrate --app infinite-cove-6352
-        - heroku maintenance:off --app infinite-cove-6352
-    staging:
-      branch: staging
-      commands:
-        - heroku maintenance:on --app boiling-wildwood-8476
-        - git push git@heroku.com:boiling-wildwood-8476.git $CIRCLE_SHA1:refs/heads/master
-        - heroku run rake db:migrate --app boiling-wildwood-8476
-        - heroku maintenance:off --app boiling-wildwood-8476
+deployment:
+  production:
+    branch: master
+    commands:
+      - heroku maintenance:on --app infinite-cove-6352
+      - heroku pg:backups capture --app infinite-cove-6352
+      - git push git@heroku.com:infinite-cove-6352.git $CIRCLE_SHA1:refs/heads/master
+      - heroku run rake db:migrate --app infinite-cove-6352
+      - heroku maintenance:off --app infinite-cove-6352
+  staging:
+    branch: staging
+    commands:
+      - heroku maintenance:on --app boiling-wildwood-8476
+      - git push git@heroku.com:boiling-wildwood-8476.git $CIRCLE_SHA1:refs/heads/master
+      - heroku run rake db:migrate --app boiling-wildwood-8476
+      - heroku maintenance:off --app boiling-wildwood-8476
