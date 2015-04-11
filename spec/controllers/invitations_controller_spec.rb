@@ -48,6 +48,7 @@ describe InvitationsController do
 
     context "with invalid inputs" do
       after { ActionMailer::Base.deliveries.clear }
+      before { ActionMailer::Base.deliveries.clear }
       
       it "renders the invite page" do
         set_current_user
