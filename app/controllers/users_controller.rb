@@ -23,6 +23,21 @@ class UsersController < ApplicationController
       handle_token
       session[:user_id] = @user.id
       AppMailer.delay.send_welcome_mail(@user)
+
+      Stripe.api_key = ENV['STRIPE_SECRET_KEY']
+      token = params[:stripeToken]
+
+      begin
+        charge = Stripe::Charge.create(
+          :amount => 999,
+          :currency => "usd",
+          :source => token,
+          :description => "Sign up charge for #{@user.email}"
+        )
+      rescue Stripe::CardError => e
+        flash.now[:danger] = e.message
+        render :new and return
+      end
       redirect_to home_path
     else
       render :new
