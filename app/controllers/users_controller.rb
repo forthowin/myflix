@@ -24,14 +24,11 @@ class UsersController < ApplicationController
       session[:user_id] = @user.id
       AppMailer.delay.send_welcome_mail(@user)
 
-      Stripe.api_key = ENV['STRIPE_SECRET_KEY']
-      token = params[:stripeToken]
-
+      #Stripe.api_key = ENV['STRIPE_SECRET_KEY']
       begin
-        charge = Stripe::Charge.create(
+        charge = StripeWrapper::Charge.create(
           :amount => 999,
-          :currency => "usd",
-          :source => token,
+          :source => params[:stripeToken],
           :description => "Sign up charge for #{@user.email}"
         )
       rescue Stripe::CardError => e

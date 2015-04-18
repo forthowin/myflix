@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 feature "User invites friend" do
-  scenario "friend accepts invitation and the two follows each other" do
+  scenario "friend accepts invitation and the two follows each other", {js: true, vcr: true} do
     bob = Fabricate(:user)
     sign_in(bob)
 
@@ -28,6 +28,10 @@ feature "User invites friend" do
     current_email.click_link "Create an account at myflix"
     fill_in "Password", with: "password"
     fill_in "Full Name", with: "Jim Jo"
+    fill_in "Credit Card Number", with: "4242424242424242"
+    fill_in "Security Code", with: "123"
+    select "7 - July", from: "date_month"
+    select "2018", from: "date_year"
     click_button "Sign Up"
   end
 
