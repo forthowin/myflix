@@ -45,9 +45,10 @@ describe UsersController do
   end
 
   describe "POST create" do
-    before { StripeWrapper::Charge.stub(:create) }
-    
-    context "with valid input" do
+    context "with valid personal and card info" do
+      let(:charge) { double(:charge, successful?: true) }
+      before { StripeWrapper::Charge.should_receive(:create).and_return(charge) }
+
       it "creates the user" do
         post :create, user: Fabricate.attributes_for(:user)
         expect(User.count).to eq(1)
@@ -74,7 +75,7 @@ describe UsersController do
         expect(bob.follows?(assigns(:user))).to be_truthy
       end
 
-      it "expires the invitation uppon acceptance" do
+      it "expires the invitation upon acceptance" do
         bob = Fabricate(:user)
         bill = Fabricate.attributes_for(:user, email: 'bill@example.com', full_name: 'Bill Boe')
         invitation = Fabricate(:invitation, recipient_email: 'bill@example.com', recipient_name: 'Bill Boe', inviter: bob)
@@ -88,27 +89,63 @@ describe UsersController do
       end
     end
 
-    context "with invalid input" do
-      before do
-        post :create, user: { email: 'example@myflix.com', password: 'password' }
-      end
+    context "with invalid personal info" do
+      before { ActionMailer::Base.deliveries.clear }
 
       it "does not create the user" do
+        post :create, user: { email: 'example@myflix.com', password: 'password' }
         expect(User.count).to eq(0)
       end
 
       it "it renders the :new template" do
+        post :create, user: { email: 'example@myflix.com', password: 'password' }
         expect(response).to render_template :new
       end
 
       it "sets @user" do
+        post :create, user: { email: 'example@myflix.com', password: 'password' }
         expect(assigns(:user)).to be_a_new(User)
+      end
+
+      it "does not charge the card" do
+        StripeWrapper::Charge.should_not_receive(:charge)
+        post :create, user: { email: 'example@myflix.com', password: 'password' }
+      end
+
+      it "does not send an email with invalid inputs" do
+        post :create, user: { email: 'bob@myflix.com', password: 'password' }
+        expect(ActionMailer::Base.deliveries).to be_empty
+      end
+    end
+
+    context "with valid personal info and invalid card info" do
+      let(:charge) { double(:charge, successful?: false, error_message: 'Your card was declined.') }
+      before { StripeWrapper::Charge.should_receive(:create).and_return(charge) }
+
+      it "does not create the user" do
+        post :create, user: Fabricate.attributes_for(:user), stripeToken: '12345'
+        expect(User.count).to eq(0)
+      end
+
+      it "renders the new template" do
+        post :create, user: Fabricate.attributes_for(:user), stripeToken: '12345'
+        expect(response).to render_template :new
+      end
+
+      it "sets the flash danger message" do
+        post :create, user: Fabricate.attributes_for(:user), stripeToken: '12345'
+        expect(flash[:danger]).to eq('Your card was declined.')
       end
     end
 
     context "sending emails" do
+      let(:charge) { double(:charge, successful?: true) }
+      before do
+        StripeWrapper::Charge.should_receive(:create).and_return(charge)
+        ActionMailer::Base.deliveries.clear
+      end
+
       after { ActionMailer::Base.deliveries.clear }
-      before { ActionMailer::Base.deliveries.clear }
 
       it "sends an email to the user with valid inputs" do
         post :create, user: { email: 'bob@myflix.com', password: 'password', full_name: 'bob doe' }
@@ -118,11 +155,6 @@ describe UsersController do
       it "sends an email containing the user name with valid inputs" do
         post :create, user: { email: 'bob@myflix.com', password: 'password', full_name: 'bob doe' }
         expect(ActionMailer::Base.deliveries.last.body).to include('bob doe')
-      end
-
-      it "does not send an email with invalid inputs" do
-        post :create, user: { email: 'bob@myflix.com', password: 'password' }
-        expect(ActionMailer::Base.deliveries).to be_empty
       end
     end
   end
