@@ -35,12 +35,14 @@ class UsersController < ApplicationController
         handle_token
         session[:user_id] = @user.id
         AppMailer.delay.send_welcome_mail(@user)
+        flash[:success] = "Thank you for registering with MyFlix!"
         redirect_to home_path
       else
-        flash[:danger] = charge.error_message
+        flash.now[:danger] = charge.error_message
         render :new
       end
     else
+      flash.now[:danger] = "There were some errors."
       render :new
     end
   end
