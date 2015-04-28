@@ -10,6 +10,7 @@ feature "User registers", { js: true, vcr: true } do
     fill_in_valid_card
     click_button "Sign Up"
     expect(page).to have_content("Thank you for registering with MyFlix!")
+    clear_email
   end
 
   scenario "with valid user info and invalid card" do

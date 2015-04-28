@@ -2,10 +2,10 @@
 http_interactions:
 - request:
     method: post
-    uri: https://api.stripe.com/v1/customers
+    uri: https://api.stripe.com/v1/tokens
     body:
       encoding: US-ASCII
-      string: source=tok_15wQ1yCefoGgth4Q2h9c1bKT&plan=base&email=Jim%40example.com
+      string: card[number]=4242424242424242&card[exp_month]=4&card[exp_year]=2018&card[cvc]=314
     headers:
       Accept:
       - "*/*; q=0.5, application/xml"
@@ -22,7 +22,7 @@ http_interactions:
         tho-VirtualBox 3.13.0-24-generic #47-Ubuntu SMP Fri May 2 23:30:00 UTC 2014
         x86_64 x86_64 x86_64 GNU/Linux"}'
       Content-Length:
-      - '69'
+      - '81'
   response:
     status:
       code: 200
@@ -31,11 +31,11 @@ http_interactions:
       Server:
       - nginx
       Date:
-      - Tue, 28 Apr 2015 04:09:10 GMT
+      - Tue, 28 Apr 2015 03:51:41 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '2306'
+      - '728'
       Connection:
       - keep-alive
       Access-Control-Allow-Credentials:
@@ -49,7 +49,97 @@ http_interactions:
       Cache-Control:
       - no-cache, no-store
       Request-Id:
-      - req_GhkMOtN6zPRm2BVJ
+      - req_2oIsnxXf3HWpq7Y4
+      Stripe-Version:
+      - '2015-04-07'
+      Strict-Transport-Security:
+      - max-age=31556926; includeSubDomains
+    body:
+      encoding: UTF-8
+      string: |
+        {
+          "id": "tok_15wPl3CefoGgth4QHLRbyR70",
+          "livemode": false,
+          "created": 1430193101,
+          "used": false,
+          "object": "token",
+          "type": "card",
+          "card": {
+            "id": "card_15wPl3CefoGgth4QdrfLLyYL",
+            "object": "card",
+            "last4": "4242",
+            "brand": "Visa",
+            "funding": "credit",
+            "exp_month": 4,
+            "exp_year": 2018,
+            "fingerprint": "covvpkA6on6GRi6z",
+            "country": "US",
+            "name": null,
+            "address_line1": null,
+            "address_line2": null,
+            "address_city": null,
+            "address_state": null,
+            "address_zip": null,
+            "address_country": null,
+            "cvc_check": "unchecked",
+            "address_line1_check": null,
+            "address_zip_check": null,
+            "dynamic_last4": null
+          },
+          "client_ip": "98.198.185.160"
+        }
+    http_version: 
+  recorded_at: Tue, 28 Apr 2015 03:51:41 GMT
+- request:
+    method: post
+    uri: https://api.stripe.com/v1/customers
+    body:
+      encoding: US-ASCII
+      string: source=tok_15wPl3CefoGgth4QHLRbyR70&plan=base&email=tony%40volkmanbednar.com
+    headers:
+      Accept:
+      - "*/*; q=0.5, application/xml"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - Stripe/v1 RubyBindings/1.20.4
+      Authorization:
+      - Bearer sk_test_c5I9VU9KjDJoyICPO4ZDnb9E
+      Content-Type:
+      - application/x-www-form-urlencoded
+      X-Stripe-Client-User-Agent:
+      - '{"bindings_version":"1.20.4","lang":"ruby","lang_version":"2.1.4 p265 (2014-10-27)","platform":"x86_64-linux","publisher":"stripe","uname":"Linux
+        tho-VirtualBox 3.13.0-24-generic #47-Ubuntu SMP Fri May 2 23:30:00 UTC 2014
+        x86_64 x86_64 x86_64 GNU/Linux"}'
+      Content-Length:
+      - '76'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Tue, 28 Apr 2015 03:51:43 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '2313'
+      Connection:
+      - keep-alive
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Methods:
+      - GET, POST, HEAD, OPTIONS, DELETE
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Max-Age:
+      - '300'
+      Cache-Control:
+      - no-cache, no-store
+      Request-Id:
+      - req_d5hzk2iDwGiBUXce
       Stripe-Version:
       - '2015-04-07'
       Strict-Transport-Security:
@@ -59,21 +149,21 @@ http_interactions:
       string: |
         {
           "object": "customer",
-          "created": 1430194150,
-          "id": "cus_68hQuEZEohzhQ9",
+          "created": 1430193102,
+          "id": "cus_68h9LUNTxy2djz",
           "livemode": false,
           "description": null,
-          "email": "Jim@example.com",
+          "email": "tony@volkmanbednar.com",
           "delinquent": false,
           "metadata": {},
           "subscriptions": {
             "object": "list",
             "total_count": 1,
             "has_more": false,
-            "url": "/v1/customers/cus_68hQuEZEohzhQ9/subscriptions",
+            "url": "/v1/customers/cus_68h9LUNTxy2djz/subscriptions",
             "data": [
               {
-                "id": "sub_68hQ8Wyfjv8Fhq",
+                "id": "sub_68h9CQD8OaEEet",
                 "plan": {
                   "interval": "month",
                   "name": "myflix subscription",
@@ -89,12 +179,12 @@ http_interactions:
                   "statement_descriptor": null
                 },
                 "object": "subscription",
-                "start": 1430194150,
+                "start": 1430193102,
                 "status": "active",
-                "customer": "cus_68hQuEZEohzhQ9",
+                "customer": "cus_68h9LUNTxy2djz",
                 "cancel_at_period_end": false,
-                "current_period_start": 1430194150,
-                "current_period_end": 1432786150,
+                "current_period_start": 1430193102,
+                "current_period_end": 1432785102,
                 "ended_at": null,
                 "trial_start": null,
                 "trial_end": null,
@@ -114,15 +204,15 @@ http_interactions:
             "object": "list",
             "total_count": 1,
             "has_more": false,
-            "url": "/v1/customers/cus_68hQuEZEohzhQ9/sources",
+            "url": "/v1/customers/cus_68h9LUNTxy2djz/sources",
             "data": [
               {
-                "id": "card_15wQ1xCefoGgth4QyxKDrb1i",
+                "id": "card_15wPl3CefoGgth4QdrfLLyYL",
                 "object": "card",
                 "last4": "4242",
                 "brand": "Visa",
                 "funding": "credit",
-                "exp_month": 7,
+                "exp_month": 4,
                 "exp_year": 2018,
                 "fingerprint": "covvpkA6on6GRi6z",
                 "country": "US",
@@ -138,12 +228,12 @@ http_interactions:
                 "address_zip_check": null,
                 "dynamic_last4": null,
                 "metadata": {},
-                "customer": "cus_68hQuEZEohzhQ9"
+                "customer": "cus_68h9LUNTxy2djz"
               }
             ]
           },
-          "default_source": "card_15wQ1xCefoGgth4QyxKDrb1i"
+          "default_source": "card_15wPl3CefoGgth4QdrfLLyYL"
         }
     http_version: 
-  recorded_at: Tue, 28 Apr 2015 04:09:11 GMT
+  recorded_at: Tue, 28 Apr 2015 03:51:43 GMT
 recorded_with: VCR 2.9.3
