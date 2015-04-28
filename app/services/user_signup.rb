@@ -12,6 +12,7 @@ class UserSignup
         :user => @user
       )
       if customer.successful?
+        @user.customer_token = customer.customer_token
         @user.save
         handle_token(invitation_token)
         AppMailer.delay.send_welcome_mail(@user)

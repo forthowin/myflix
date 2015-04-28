@@ -24,6 +24,8 @@ Myflix::Application.routes.draw do
 
   get '/invite', to: 'invitations#new'
 
+  mount StripeEvent::Engine, at: '/stripe-events'
+
   resources :users, only: [:create, :show]
   resources :videos, only: :show do
     collection do
